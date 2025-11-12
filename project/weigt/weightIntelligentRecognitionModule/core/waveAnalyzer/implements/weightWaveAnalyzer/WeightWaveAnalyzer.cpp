@@ -7,7 +7,6 @@
 #include <limits>
 #include <ranges>
 #include <stdexcept>
-#include <bits/ranges_algobase.h>
 
 void WeightWaveAnalyzer::setInputData(const std::vector<double> &inputData) {
     originalData.resize(inputData.size());

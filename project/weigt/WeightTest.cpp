@@ -35,7 +35,7 @@ double compute_error(const std::vector<double>& observed, const std::vector<doub
     return error / observed.size();
 }
 
-int main() {
+int m12ain() {
     // 假设的观察数据和真实数据
     const std::vector observed_values = {558.177551, 567.8112245, 558.177551, 567.8112245, 608.3336735};  // 示例数据
     const std::vector<double> actual_values = {690, 690, 576, 576, 648};   // 真实数据
