@@ -1,6 +1,7 @@
 //
 // Created by walking typhoon on 2025/11/12.
 //
+#pragma once
 
 #include "LidarClient.hpp"
 

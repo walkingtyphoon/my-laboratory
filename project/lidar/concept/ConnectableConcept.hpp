@@ -9,8 +9,7 @@
 #include <string>
 
 template<typename ImplementClass>
-concept ConnectableConcept = requires(ImplementClass implementClass, const std::string &newData)
-{
+concept ConnectableConcept = requires(ImplementClass implementClass, const std::string & newData){
     {
         implementClass.parseReceiveData(newData)
     } -> std::same_as<void>;

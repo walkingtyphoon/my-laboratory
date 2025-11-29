@@ -1,68 +1,41 @@
 //
-// Created by jiahan on 25-1-2.
+// Created by walking typhoon on 2025/11/5.
 //
-#include <iostream>
-#include <cmath>
-#include <ranges>
-#include <vector>
-#include <tuple>
-#include <spdlog/spdlog.h>
 
-struct Point {
-    double x;
-    double y;
-};
+void QuickSort(int *arr, int begin, int end) {
+    //递归出口
+    if (begin >= end)
+        return;
 
-[[nodiscard]] double distance2D(const Point &one, const Point &two) {
-    return sqrt((two.x - one.x) * (two.x - one.x) + (two.y - one.y) * (two.y - one.y));
-}
-
-void printDistancesFromBase(const Point &base, const std::vector<Point> &points) {
-    for (const auto &point: points) {
-        spdlog::info("distance to {}", distance2D(base, point));
-    }
-}
-
-constexpr Point ORIGIN{0, 0};
-
-
-std::tuple<double, double, double> findFarthestPointFromOrigin(const std::vector<Point> &points) {
-    if (points.empty()) {
-        spdlog::warn("The points vector is empty.");
-        return {0.0, 0.0, 0.0}; // 或者抛出 std::invalid_argument
-    }
-
-    double maxDistance = 0;
-
-    std::tuple<double, double, double> bestFarthestPoint{0, 0, 0};
-
-
-    for (const auto &point: points) {
-        if (const auto distance = distance2D(ORIGIN, point); distance > maxDistance) {
-            maxDistance = distance;
-
-            bestFarthestPoint = {point.x, point.y, maxDistance};
+    int left = begin, right = end;
+    int pivot = arr[left]; //选择第一个数据为基准值，0下标的位置即为坑
+    while (left < right) {
+        //内部循环可能会出现left==right的情况，所以内部也需要判断
+        while (left < right && arr[right] >= pivot) {
+            right--;
         }
+        //走到这里说明此时arr[right]的数据小于pivot，填坑
+        arr[left] = arr[right];
+        left++;
+
+        while (left < right && arr[left] <= pivot) {
+            left++;
+        }
+        //走到这里说明此时arr[left]的数据大于pivot，填坑
+        arr[right] = arr[left];
+        right--;
     }
+    //left等于right时，此时的位置就是pivot的位置
+    arr[left] = pivot;
 
+    //左区间为[begin,left-1]
+    QuickSort(arr, begin, left - 1); //递归左区间
 
-    return bestFarthestPoint;
+    //[right+1,end]
+    QuickSort(arr, right + 1, end); //递归右区间
 }
 
-int ma222222in() {
-    // 一些示例点
-    const std::vector<Point> points = {
-        {1.0, 2.0},
-        {4.0, 6.0},
-        {-3.0, 4.0},
-        {10.0, 0.0}
-    };
 
-    printDistancesFromBase(ORIGIN, points);
-
-    auto [x, y, dist] = findFarthestPointFromOrigin(points);
-
-    spdlog::info("Farthest point from origin is {},{}, distance = {}", x, y, dist);
-
-    return 0;
+int main(int argc, char *argv[]) {
+    QuickSort(&argc, 0, 10);
 }
