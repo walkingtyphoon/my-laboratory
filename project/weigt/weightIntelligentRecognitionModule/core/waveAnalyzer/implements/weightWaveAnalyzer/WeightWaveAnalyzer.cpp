@@ -2,11 +2,13 @@
 // Created by jiahan on 24-12-25.
 //
 
+
 #include "WeightWaveAnalyzer.hpp"
 
 #include <limits>
 #include <ranges>
 #include <stdexcept>
+#include <bits/ranges_algobase.h>
 
 void WeightWaveAnalyzer::setInputData(const std::vector<double> &inputData) {
     originalData.resize(inputData.size());
@@ -44,57 +46,42 @@ auto WeightWaveAnalyzer::findAllValleys(const std::vector<int> &peakIndexes) -> 
     std::vector<int> valleysData;
 
     for (int i = 0; i < peakIndexesSize - 1; ++i) {
-        auto beforePeakIndex = peakIndexes.at(i);
-
+        const auto beforePeakIndex = peakIndexes.at(i);
         const auto afterPeakIndex = peakIndexes.at(i + 1);
 
-
         double min = std::numeric_limits<double>::max();
+        int minIndex = beforePeakIndex;
 
-
-        while (beforePeakIndex < afterPeakIndex) {
-            if (min > originalData.at(beforePeakIndex)) {
-                min = originalData.at(beforePeakIndex);
+        // 仅在当前两峰之间搜索波谷
+        for (auto idx = beforePeakIndex; idx < afterPeakIndex; ++idx) {
+            const auto value = originalData.at(idx);
+            if (value < min) {
+                min = value;
+                minIndex = static_cast<int>(idx);
             }
-
-            beforePeakIndex++;
         }
 
         if (min != std::numeric_limits<double>::max()) {
-            if (const auto valleyIndexIterator = std::ranges::find(originalData, min);
-                valleyIndexIterator != originalData.end()) {
-                const auto valleyIndex = std::distance(originalData.begin(), valleyIndexIterator);
-                valleysData.push_back(static_cast<int>(valleyIndex));
-            }
+            valleysData.push_back(minIndex);
         }
     }
 
-    const auto lastPeak = originalData.at(peakIndexes.back());
-
-    const auto lastElement = originalData.at(peakIndexesSize);
-
-    if (lastPeak != lastElement) {
-        auto beforePeakIndex = peakIndexes.back();
-
-        const auto afterPeakIndex = originalData.size();
-
-
+    const auto lastPeakIndex = peakIndexes.back();
+    // 若末尾还有下降趋势，则在最后一个波峰到序列末尾寻找波谷
+    if (lastPeakIndex < static_cast<int>(originalData.size() - 1)) {
         double min = std::numeric_limits<double>::max();
+        int minIndex = lastPeakIndex;
 
-
-        while (beforePeakIndex != afterPeakIndex) {
-            if (min > originalData.at(beforePeakIndex)) {
-                min = originalData.at(beforePeakIndex);
+        for (auto idx = lastPeakIndex; idx < static_cast<int>(originalData.size()); ++idx) {
+            const auto value = originalData.at(idx);
+            if (value < min) {
+                min = value;
+                minIndex = static_cast<int>(idx);
             }
-            beforePeakIndex++;
         }
 
         if (min != std::numeric_limits<double>::max()) {
-            if (const auto valleyIndexIterator = std::ranges::find(originalData, min);
-                valleyIndexIterator != originalData.end()) {
-                const auto valleyIndex = std::distance(originalData.begin(), valleyIndexIterator);
-                valleysData.push_back(static_cast<int>(valleyIndex));
-            }
+            valleysData.push_back(minIndex);
         }
     }
 

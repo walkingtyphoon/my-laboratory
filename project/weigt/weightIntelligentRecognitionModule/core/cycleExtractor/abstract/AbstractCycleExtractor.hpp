@@ -12,7 +12,6 @@ class AbstractCycleExtractor {
 public:
     virtual auto extractorCycles() -> std::vector<std::vector<double>> = 0;
 
-
     virtual ~AbstractCycleExtractor();
 };
 

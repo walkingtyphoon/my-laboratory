@@ -4,14 +4,17 @@
 
 #include "DefaultWeightRecognitionService.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include "../../../../core/cycleExtractor/implements/weightCycleExtractor/WeightCycleExtractor.hpp"
 #include "../../../../core/dataProcessor/implements/weightDataProcessor/WeightDataProcessor.hpp"
 #include "../../../../core/waveAnalyzer/implements/weightWaveAnalyzer/WeightWaveAnalyzer.hpp"
 #include "../../../../core/weightCalculator/implements/default/DefaultWeightCalculator.hpp"
 #include "../../../../scalingFactor/implements/weight/default/WeightDefaultScalingFactorCalculator.hpp"
 
-double DefaultWeightRecognitionService::run(const std::vector<double> &input) {
+#include "../../../../tools/weightConverter/WeightUnitConverter.hpp"
 
+double DefaultWeightRecognitionService::run(const std::vector<double> &input) {
     dataProcessor->setOriginalData(input);
 
     auto allCycle = dataProcessor->filterValidCycle(0.1);
@@ -29,12 +32,13 @@ double DefaultWeightRecognitionService::run(const std::vector<double> &input) {
 
     const std::unique_ptr<AbstractCycleExtractor> cycleExtractor = std::make_unique<WeightCycleExtractor>(
         allCycle, allPeakIndexes, allValleysIndex);
-
     const auto allCycleData = cycleExtractor->extractorCycles();
 
     const auto sum = weightCalculator->calculate(allCycleData);
 
-    return sum * factor;
+    spdlog::info(sum * factor);
+
+    return WeightUnitConverter::convertKNtoKG(sum * factor);
 }
 
 DefaultWeightRecognitionService::DefaultWeightRecognitionService() {

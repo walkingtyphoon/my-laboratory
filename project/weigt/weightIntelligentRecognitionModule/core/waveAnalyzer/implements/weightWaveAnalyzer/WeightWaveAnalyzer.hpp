@@ -14,6 +14,7 @@ public:
 
     auto findAllPeaks() -> std::vector<int> override;
 
+
     auto findAllValleys(const std::vector<int> &peakIndexes) -> std::vector<int> override;
 
 private:

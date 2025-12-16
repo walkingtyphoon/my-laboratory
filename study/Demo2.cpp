@@ -26,4 +26,5 @@ int m2323ain(int argc, char *argv[]) {
     });
 
     device.start();
+    return 0;
 }

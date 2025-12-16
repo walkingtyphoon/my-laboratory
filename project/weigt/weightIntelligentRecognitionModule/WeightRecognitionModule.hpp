@@ -10,9 +10,9 @@
 #include "factory/abstract/AbstractWeightRecognitionFactory.hpp"
 
 namespace WeightRecognitionModule {
-    inline std::unique_ptr<AbstractWeightRecognitionFactory>& getFactory();
+    std::unique_ptr<AbstractWeightRecognitionFactory> &getFactory();
 
-    inline double run(const std::vector<double> &inputData) ;
+    double run(const std::vector<double> &inputData);
 };
 
 

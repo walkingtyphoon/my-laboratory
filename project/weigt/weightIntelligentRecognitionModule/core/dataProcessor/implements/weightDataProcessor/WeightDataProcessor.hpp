@@ -17,6 +17,7 @@ public:
 private:
 
     std::vector<double> originalData;
+
 };
 
 
